@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/aop   
+      http://www.springframework.org/schema/aop/spring-aop.xsd">
+      	
+	<!-- 1、配置要创建的对象:
+		 scope：默认单列singleton，多列prototype
+		 lazy-init="true":对于单列，延迟加载
+		 init-method：对象初始加载的方法
+		 destroy-method:对象销毁调用的方法
+	 -->
+	<bean id="user"  class="com.hexl.springtest.springxml.User" scope="singleton" lazy-init="true"></bean>
+	<bean id="product"  class="com.hexl.springtest.springxml.Product" scope="prototype" init-method="" destroy-method=""></bean>
+
+	<!-- 带参数构造器 :可以直接赋值和引用赋值-->
+	<bean id="str" class="java.lang.String">
+		<constructor-arg value="long1"></constructor-arg>
+	</bean>
+	<bean id="user1"  class="com.hexl.springtest.springxml.User" scope="singleton" >
+		<constructor-arg ref="str"></constructor-arg>
+	</bean>
+	<!-- set方法给属性注入值  如果是对象引用，用ref-->
+	<bean id="user2"  class="com.hexl.springtest.springxml.User" scope="singleton" >
+		<property name="userName" value="xiaoxiao"></property>
+	</bean>
+	
+	<!--2、自动装配-->
+	<bean id="userDao" class="com.hexl.springtest.autoload.UserDao"></bean>
+	
+	<bean id="userService" class="com.hexl.springtest.autoload.UserService" autowire="byName"></bean>
+	<!-- 根据名称自动装配，自动查找与属性同名的对象；id
+		 可以将该注释移动到全局；
+		 也可以根据类型自动装配class,此时配置文件中的class不可重复；
+	 -->
+	<bean id="userAction" class="com.hexl.springtest.autoload.UserAction" autowire="byName"></bean>
+	
+	<!-- 3、AOP -->
+	<bean id="orderDao" class="com.hexl.aop.OrderDao"></bean>
+	<bean id="aop" class="com.hexl.aop.Aop"></bean>
+	<!-- 
+	<aop:config>
+		<aop:pointcut expression="execution(* com.hexl.aop.OrderDao.*(..))" id="pt"/>
+		<aop:aspect ref="aop">
+			<aop:before method="begin" pointcut="pt"/>
+			<aop:after method="after" pointcut="pt"/>
+		</aop:aspect>
+	</aop:config>
+	 -->
+	<!-- 4、hessian-client -->
+	<bean id="hessianClient" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		 <!-- 服务请求地址 -->
+         <property name="serviceUrl">
+             <value>http://localhost:8080/ssi-demo/hessian/service</value>
+         </property>
+         <!-- 远程服务的接口 -->
+         <property name="serviceInterface">
+             <value>com.hexl.hessianitf.HelloService</value>
+         </property>
+  </bean>
+</beans>

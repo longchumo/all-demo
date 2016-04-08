@@ -1,0 +1,4 @@
+1、 测试spring 对象创建、依赖，xml方式
+2、测试spring aop，xml方式
+3、代理模式、cglib实例；
+4、hessian-client调用；
